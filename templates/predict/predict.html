@@ -1,0 +1,354 @@
+{% extends 'base.html' %} {% block title %} Predict {% endblock %} {% block
+mycss %}
+<style>
+  .spinner {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    border: 4.5px solid #0000;
+    border-radius: 50%;
+    border-color: #dbdcef #0000;
+    animation: spinner-e04l1k 1s infinite linear;
+  }
+
+  .spinner::before,
+  .spinner::after {
+    content: "";
+    grid-area: 1/1;
+    margin: 2.2px;
+    border: inherit;
+    border-radius: 50%;
+  }
+
+  .spinner::before {
+    border-color: #474bff #0000;
+    animation: inherit;
+    animation-duration: 0.5s;
+    animation-direction: reverse;
+  }
+
+  .spinner::after {
+    margin: 8.9px;
+  }
+
+  @keyframes spinner-e04l1k {
+    100% {
+      transform: rotate(1turn);
+    }
+  }
+
+  .hidden {
+    display: none ;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container">
+  <br /><br />
+  <form
+    class="d-flex justify-content-center text-light"
+    action="/predict"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <input type="file" name="file111" />
+    <input type="submit" value="提交" />
+  </form>
+  {% if uploaded==False %}
+  <div class="preview d-flex justify-content-center text-warning">
+    <p class="">未上传文件</p>
+  </div>
+  {% else %}
+  <div class="preview d-flex justify-content-center text-success">
+    <div class="text-center">
+      <p>已上传：<span id="upload-filename">{{filename}}</span></p>
+      <div class="d-flex justify-content-center">
+        <img
+          width="15%"
+          src="{{url_for('static', filename='images/file.png')}}"
+          alt=""
+        />
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="d-flex justify-content-center">
+    <button id="predict" type="button" class="btn btn-primary fs-4">
+      开始检测
+    </button>
+  </div>
+  <br />
+  <div class="d-flex justify-content-center">
+    <div id="loader"></div>
+  </div>
+
+  <div class="predict-container">
+    <table class="table table-info table-striped table-primary">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">即时记忆</th>
+          <th scope="col">定向力</th>
+          <th scope="col">执行能力</th>
+          <th scope="col">注意力</th>
+          <th scope="col">语言功能</th>
+          <th scope="col">延迟回忆</th>
+          <th scope="col">视空间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="result-table-row">
+          <th scope="row">检测结果</th>
+          <td>待测试</td>
+          <td>待测试</td>
+          <td>待测试</td>
+          <td>待测试</td>
+          <td>待测试</td>
+          <td>待测试</td>
+          <td>待测试</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="show-pic-container hidden">
+    <img style="width: 100%;height: 500px;" id="p0" src="" alt="">
+    <img style="width: 100%;" id="p1" src="" alt="">
+    <img style="width: 100%;height: 500px;" id="p2" src="" alt="">
+    <div id="carouselExampleIndicators" class="carousel slide">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 6"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="7" aria-label="Slide 8"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="8" aria-label="Slide 9"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="9" aria-label="Slide 10"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="10" aria-label="Slide 11"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="11" aria-label="Slide 12"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="12" aria-label="Slide 13"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="13" aria-label="Slide 14"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="14" aria-label="Slide 15"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="15" aria-label="Slide 16"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="16" aria-label="Slide 17"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="17" aria-label="Slide 18"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="18" aria-label="Slide 19"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="19" aria-label="Slide 20"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="20" aria-label="Slide 21"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="21" aria-label="Slide 22"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="22" aria-label="Slide 23"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="23" aria-label="Slide 24"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="24" aria-label="Slide 25"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="25" aria-label="Slide 26"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="26" aria-label="Slide 27"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="27" aria-label="Slide 28"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="28" aria-label="Slide 29"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="29" aria-label="Slide 30"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="" class="d-block w-100 ppitem" alt="...">
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="" class="d-block w-100 ppitem" alt="...">
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  {% endif %}
+  <br />
+</div>
+
+{% endblock %} {% block myjs %}
+<script>
+  const predict_btn = document.querySelector("#predict");
+  let filename = document.querySelector("#upload-filename").innerHTML;
+  const result_table_row = document.querySelector("#result-table-row");
+  const loader = document.querySelector("#loader");
+  predict_btn.addEventListener("click", () => {
+    // 这里可以弄个进度条
+    loader.innerHTML = `
+            <div class="spinner"></div>
+
+        `;
+    predict_btn.disabled = true;
+    let i = 1;
+    let count = setInterval(function () {
+      predict_btn.innerHTML = `正在检测，等待时间：${i}s`;
+      i++;
+    }, 1000);
+
+    // console.log(filename)
+    const dataToSend = {
+      filname: filename,
+    };
+    fetch("/predict/run", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // 处理从Python后端返回的数据
+        // resJson = JSON.stringify(data, null, 2);
+        clearInterval(count);
+        loader.innerHTML = ``;
+        predict_btn.disabled = false;
+        predict_btn.innerHTML = "开始检测";
+        predict_btn.classList.remove("disabled");
+        result_table_row.innerHTML = `
+                <th scope="row">检测结果</th>
+                    <td>${data[0]}</td>
+                    <td>${data[1]}</td>
+                    <td>${data[2]}</td>
+                    <td>${data[3]}</td>
+                    <td>${data[4]}</td>
+                    <td>${data[5]}</td>
+                    <td>${data[6]}</td>
+            `;
+        
+        // 展示图片
+        const show_area = document.querySelector('.show-pic-container')
+        show_area.classList.remove('hidden')
+        const p0 = document.querySelector('#p0')
+        const p1 = document.querySelector('#p1')
+        const p2 = document.querySelector('#p2')
+        const ppitems = document.querySelectorAll('.ppitem')
+        p0.src = data['save_forder'] + '/0.png'
+        p1.src = data['save_forder'] + '/1.png'
+        p2.src = data['save_forder'] + '/2.png'
+        ppitems[0].src = data['save_forder'] + '/properties/property_0.png'
+        ppitems[1].src = data['save_forder'] + '/properties/property_1.png'
+        ppitems[2].src = data['save_forder'] + '/properties/property_2.png'
+        ppitems[3].src = data['save_forder'] + '/properties/property_3.png'
+        ppitems[4].src = data['save_forder'] + '/properties/property_4.png'
+        ppitems[5].src = data['save_forder'] + '/properties/property_5.png'
+        ppitems[6].src = data['save_forder'] + '/properties/property_6.png'
+        ppitems[7].src = data['save_forder'] + '/properties/property_7.png'
+        ppitems[8].src = data['save_forder'] + '/properties/property_8.png'
+        ppitems[9].src = data['save_forder'] + '/properties/property_9.png'
+        ppitems[10].src = data['save_forder'] + '/properties/property_10.png'
+        ppitems[11].src = data['save_forder'] + '/properties/property_11.png'
+        ppitems[12].src = data['save_forder'] + '/properties/property_12.png'
+        ppitems[13].src = data['save_forder'] + '/properties/property_13.png'
+        ppitems[14].src = data['save_forder'] + '/properties/property_14.png'
+        ppitems[15].src = data['save_forder'] + '/properties/property_15.png'
+        ppitems[16].src = data['save_forder'] + '/properties/property_16.png'
+        ppitems[17].src = data['save_forder'] + '/properties/property_17.png'
+        ppitems[18].src = data['save_forder'] + '/properties/property_18.png'
+        ppitems[19].src = data['save_forder'] + '/properties/property_19.png'
+        ppitems[20].src = data['save_forder'] + '/properties/property_20.png'
+        ppitems[21].src = data['save_forder'] + '/properties/property_21.png'
+        ppitems[22].src = data['save_forder'] + '/properties/property_22.png'
+        ppitems[23].src = data['save_forder'] + '/properties/property_23.png'
+        ppitems[24].src = data['save_forder'] + '/properties/property_24.png'
+        ppitems[25].src = data['save_forder'] + '/properties/property_25.png'
+        ppitems[26].src = data['save_forder'] + '/properties/property_26.png'
+        ppitems[27].src = data['save_forder'] + '/properties/property_27.png'
+        ppitems[28].src = data['save_forder'] + '/properties/property_28.png'
+        ppitems[29].src = data['save_forder'] + '/properties/property_29.png'
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+</script>
+{% endblock %}

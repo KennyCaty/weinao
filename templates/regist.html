@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block mycss %}
+    <style>
+        .login-container{
+            width: 30%;
+            margin-top: 60px;
+        }
+        @media screen and (max-width: 991px) {
+            .login-container{
+            width: 50%;
+            }
+        }
+        @media screen and (max-width: 767px) {
+            .login-container{
+            width: 70%;
+        }
+        }
+        @media screen and (max-width: 575px) {
+            .login-container{
+            width: 90%;
+        }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center">
+        <div class="login-container ">
+            <form method="POST" class="form-signin">
+                {{ form.hidden_tag() }}
+                <h1 class="h3 mb3 font-weight-normal text-center text-light">
+                    维脑用户注册
+                </h1>
+                <br>
+                <h2 class="h4 text-center text-light">{{ form.username.label() }}</h2>
+                {{ form.username(class="form-control", placeholder="输入用户名") }}
+                <h2 class="h4 text-center text-light">{{ form.fullname.label() }}</h2>
+                {{ form.fullname(class="form-control", placeholder="输入姓名") }}
+                <h2 class="h4 text-center text-light">{{ form.password.label() }}</h2>
+                {{ form.password(class="form-control", placeholder="输入密码") }}
+                <br>
+                <div class="d-flex justify-content-center">{{ form.submit(class="btn btn-lg btn-block btn-primary") }}</div>
+            </form>
+        </div>
+        
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+/*#============================================  over_write bootstrap =====================================#*/
+/* ===================================== Navbar ==========================================*/
+.nav-link:focus, .nav-link:hover, .navbar-brand:hover {
+    color: #66c2ff
+}
+
+.nav-link {
+    display: block;
+    font-size: 18px;
+    padding: .5rem 1rem;
+    color: #6666ff;
+    text-decoration: none;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out
+}
+
+.navbar-brand {
+    color: #8080ff;
+    padding-top: .3125rem;
+    padding-bottom: .3125rem;
+    margin-right: 1rem;
+    font-size: 25px;
+    text-decoration: none;
+    white-space: nowrap
+}
+
+.nav-logo {
+    width: 45px;
+    margin: 0 10px;
+}
+
+/* ===================================== End Navbar ==========================================*/
+
+
+/*#============================================ END over_write bootstrap =====================================#*/
+
+
+/*========================== Body =======================*/
+body{
+    background: #0f0f3d !important;
+    /* #e5ffff */
+}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Article - {{ article.title }}
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="container">
+        {{ article.title }} <br>
+        发布于：{{ article.create_time }} <br>
+        {{ article.content }}
+        
+    </div>
+{% endblock %}
